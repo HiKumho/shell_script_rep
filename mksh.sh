@@ -34,5 +34,12 @@ printf "#	\n"	 >> $newfile
 printf "# History :\n" 	 >> $newfile
 printf "# $(date +%Y/%m/%d)		$USER		First release\n" >> $newfile
 printf "#\n" >> $newfile
+printf "\n"  >> $newfile
+printf "# for setting path\n" >> $newfile
+printf "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:~/bin\n" >> $newfile
+printf "export PATH\n\n" >> $newfile
+printf "# for setting language family\n" >> $newfile
+printf "LANG=C.UTF-8\n" >> $newfile
+printf "export LANG\n" >> $newfile
 
 exit 0
