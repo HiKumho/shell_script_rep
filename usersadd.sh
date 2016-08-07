@@ -29,7 +29,9 @@ do
 	echo "adding user: $username" >> $logfile
 	# useradd : create home dir and specify shell
 	useradd -m -s /bin/bash $username  &>>$logfile
-	# the password is same as the username
+	# the password is same as the username.
+	# the system not support passwd --stdin, so you can also do that or
+	# (printf "${username}\n${username}\n" | passwd $username)
 	echo "${username}:${username}" | chpasswd -m  &>>$logfile
 	# request user for changing passwd at sign in
 	chage -d 0 $username   &>>$logfile
