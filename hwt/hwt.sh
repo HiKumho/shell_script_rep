@@ -22,9 +22,15 @@ export PATH
 LANG=C.UTF-8
 export LANG
 
+
 # 配置文件 
 CONFIGFILE="hwt.config"
+# 读取配置文件
+# 进入当前脚本文件的目录
+exe_path=$(pwd)  # 暂存执行此命令时的路径
+cd $(dirname $0) 
 conf_path="$(pwd)/${CONFIGFILE}"
+cd $exe_path
 
 # help显示命令 
 [ $1 == "-h" ] && echo '分类作业: hwt path -c keyword1 keyword2 keywordN' && echo '重命名作业: hwt path -r' && exit 0
@@ -88,7 +94,10 @@ classify(){
 }
 
 ## 重命名操作
-rename(){
+rename_files(){
+  # 格式化文件名,删除文件名中的空格
+  rename 's/ *//g' *
+
   # 获取班级名册
   register=$(cat $conf_path | egrep -i "^register" | cut -d ":" -f 2)
   [ -z $register ] && echo "请在文件${CONFIGFILE}中配置班级名册文件" && exit 1 
@@ -101,9 +110,9 @@ rename(){
   sum=0
   for aStu in $(cat $register)
   do 
-    id=$(echo $aStu | cut -d "-" -f 1)
+    name=$(echo $aStu | cut -d "-" -f 2)
     aStu_file=""
-    aStu_file=$(find . -maxdepth 1 | grep $id) 
+    aStu_file=$(find . -maxdepth 1 | grep $name) 
     [ -z ${aStu_file} ] && continue
     if [ -d ${aStu_file}  ] ; then 
       mv $aStu_file "${tmp_dir}/${aStu}" 
@@ -117,9 +126,11 @@ rename(){
   echo "... 完成。共${sum}个文件"
 }
 
+
+
 case $flag_opt in 
   0) classify ;;
-  1) rename ;;
+  1) rename_files ;;
 esac
 
 
