@@ -1,0 +1,39 @@
+#!/bin/sh
+# example: 
+#         proxychains-cli -1 curl google.com
+#         proxychains-cli -2 curl 192.168.200.101
+
+proxy_list_1="socks5  127.0.0.1 1080"
+proxy_list_2="socks5  127.0.0.1 12323"
+
+while getopts :12 opt
+do
+    case $opt in
+	1)
+	    proxy_list=$proxy_list_1
+	    ;;
+	2)
+            proxy_list=$proxy_list_2
+            ;;
+        :)
+            ;;
+    esac
+done
+
+shift "$((OPTIND-1))"
+
+conf=/tmp/proxychains4.conf.$UID.$$
+cat << EOF > $conf
+strict_chain
+proxy_dns
+remote_dns_subnet 224
+tcp_read_time_out 15000
+tcp_connect_time_out 8000
+[ProxyList]
+EOF
+echo "$proxy_list" >>$conf
+proxychains4 -f "${conf}" "${@}"
+ec="$?"
+rm -f "$conf"
+exit "$ec"
+
