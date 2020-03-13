@@ -5,12 +5,15 @@ cd %~dp0
 
 set /p file="Please enter checking file name, e.g. attachment.zip: "
 
+REM 过滤检验文件名称的引号
+set file=%file:"=%
+
 set "md5_file_name=md5_!file!.txt"
 for /r "%~dp0" %%a in (*) do if "%%~nxa"=="!md5_file_name!" set md5_file_path="%%~dpnxa"
 if defined md5_file_path (
   echo !md5_file_path! is found.
 ) else (
-  echo It can not check because !md5_file_path! is not found.
+  echo It can not check because !md5_file_name! is not found.
   echo Press Enter for exiting
   pause > nul
   exit
