@@ -6,7 +6,7 @@ cd %~dp0
 set /p file="Please enter checking file name, e.g. attachment.zip: "
 
 set "md5_file_name=md5_!file!.txt"
-for /r %~dp0 %%a in (*) do if "%%~nxa"=="!md5_file_name!" set md5_file_path=%%~dpnxa
+for /r "%~dp0" %%a in (*) do if "%%~nxa"=="!md5_file_name!" set md5_file_path="%%~dpnxa"
 if defined md5_file_path (
   echo !md5_file_path! is found.
 ) else (
